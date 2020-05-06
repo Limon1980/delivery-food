@@ -27,6 +27,7 @@ let login = localStorage.getItem("gloDelivery"); // получаем логин 
 
 function toogleModalAuth() {
   modalAuth.classList.toggle("is-open");
+  loginInput.style.borderColor = "";
 }
 
 //buttonAuth.addEventListener("click", toggleModal);
@@ -68,14 +69,15 @@ function autorized() {
   buttonOut.addEventListener("click", logOut);
 }
 function notAutorized() {
-  console.log("Не Авторизован");
+  //console.log("Не Авторизован");
 
   function logIn(event) {
     //console.log(event);
     event.preventDefault(); // не отправляем форму по submit не перезагружает окно
     login = loginInput.value; // сохранили имя авторизации в переменную
     if (!login) {
-      alert("Введите логин");
+      //alert("Введите логин");
+      loginInput.style.borderColor = "red";
     } else {
       localStorage.setItem("gloDelivery", login);
 
