@@ -1,19 +1,11 @@
-const cartButton = document.querySelector("#cart-button");
-const modal = document.querySelector(".modal");
-const close = document.querySelector(".close");
-
-cartButton.addEventListener("click", toggleModal);
-close.addEventListener("click", toggleModal);
-
-function toggleModal() {
-  modal.classList.toggle("is-open");
-}
-
-// day 1
+'use strict';
 
 document.querySelector("div"); // получает первый элемент в верстке
 //console.log("document: ", document.querySelector(".button-auth"));
 
+const cartButton = document.querySelector("#cart-button");
+const modal = document.querySelector(".modal");
+const close = document.querySelector(".close");
 const buttonAuth = document.querySelector(".button-auth");
 const modalAuth = document.querySelector(".modal-auth");
 const closeAuth = document.querySelector(".close-auth");
@@ -22,9 +14,18 @@ const loginInput = document.querySelector("#login");
 const userName = document.querySelector(".user-name");
 const buttonOut = document.querySelector(".button-out");
 const cardsRestaurants = document.querySelector(".cards-restaurants");
+const containerPromo = document.querySelector(".container-promo");
+const restaurants = document.querySelector(".restaurants");
+const menu = document.querySelector(".menu");
+const logo = document.querySelector(".logo");
+const cardsMenu = document.querySelector(".cards-menu");
 // modalAuth.classList.remove('modal-auth'); // удалить класс
 
 let login = localStorage.getItem("gloDelivery"); // получаем логин из localStorage
+
+function toggleModal() {
+  modal.classList.toggle("is-open");
+}
 
 function toogleModalAuth() {
   modalAuth.classList.toggle("is-open");
@@ -72,7 +73,7 @@ function autorized() {
 function notAutorized() {
   //console.log("Не Авторизован");
 
-  function logIn(event) {
+function logIn(event) {
     //console.log(event);
     event.preventDefault(); // не отправляем форму по submit не перезагружает окно
     login = loginInput.value; // сохранили имя авторизации в переменную
@@ -106,8 +107,6 @@ function checkAuth() {
   }
 }
 
-checkAuth();
-
 // карточка товара
 
 function createCardRestaurant() {
@@ -133,18 +132,84 @@ function createCardRestaurant() {
   cardsRestaurants.insertAdjacentHTML("beforeend", card);
 }
 
-createCardRestaurant();
-createCardRestaurant();
-createCardRestaurant();
+
+function createCardGood() {
+  const  card = document.createElement('div');
+  card.className = 'card';
+
+  card.insertAdjacentHTML("beforeend",  `
+
+  <img
+    src="img/pizza-plus/pizza-classic.jpg"
+    alt="image"
+    class="card-image"
+  />
+  <div class="card-text">
+    <div class="card-heading">
+      <h3 class="card-title card-title-reg">Пицца Классика</h3>
+    </div>
+    <div class="card-info">
+      <div class="ingredients">
+        Соус томатный, сыр «Моцарелла», сыр «Пармезан», ветчина,
+        салями, грибы.
+      </div>
+    </div>
+    <div class="card-buttons">
+      <button class="button button-primary button-add-cart">
+        <span class="button-card-text">В корзину</span>
+        <span class="button-cart-svg"></span>
+      </button>
+      <strong class="card-price-bold">510 ₽</strong>
+    </div>
+  </div>
+
+  `);
+
+  cardsMenu.insertAdjacentElement('beforeend',card);
+}
+
 
 function openGoods(event) {
+
+  if (login){
   const target = event.target;
 
   const restaurant = target.closest(".card-restaurant");
 
   if (restaurant) {
+    cardsMenu.textContent = '';
     console.log(restaurant);
+    containerPromo.classList.add('hide');
+    restaurants.classList.add('hide');
+    menu.classList.remove('hide');
+
+   
+
+    createCardGood();
+    createCardGood();
+    createCardGood();
   }
+
+} else {
+  toogleModalAuth();
+}
 }
 
+
+cartButton.addEventListener("click", toggleModal);
+
+close.addEventListener("click", toggleModal);
+
 cardsRestaurants.addEventListener("click", openGoods);
+
+logo.addEventListener('click', function() {
+  containerPromo.classList.remove('hide');
+  restaurants.classList.remove('hide');
+  menu.classList.add('hide');
+});
+
+checkAuth();
+
+createCardRestaurant();
+createCardRestaurant();
+createCardRestaurant();
