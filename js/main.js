@@ -23,6 +23,13 @@ const cardsMenu = document.querySelector(".cards-menu");
 
 let login = localStorage.getItem("gloDelivery"); // получаем логин из localStorage
 
+// регулярные выражания для валидации формы
+const valid = function(str){
+  const nameReg = /^[a-zA-Z][a-zA-Z0-9-_\.]{1,20}$/;
+  //console.log(nameReg.test(str));
+  return nameReg.test(str); 
+}
+
 function toggleModal() {
   modal.classList.toggle("is-open");
 }
@@ -48,6 +55,11 @@ function toogleModalAuth() {
 // });
 
 //buttonAuth.removeEventListener('click', toogleModalAuth);
+function returnMain() {
+  containerPromo.classList.remove('hide');
+  restaurants.classList.remove('hide');
+  menu.classList.add('hide');
+}
 
 function autorized() {
   function logOut() {
@@ -58,6 +70,7 @@ function autorized() {
     buttonOut.style.display = "";
     buttonOut.removeEventListener("click", logOut);
     checkAuth();
+    returnMain();
   }
 
   console.log("Авторизован");
@@ -77,9 +90,10 @@ function logIn(event) {
     //console.log(event);
     event.preventDefault(); // не отправляем форму по submit не перезагружает окно
     login = loginInput.value; // сохранили имя авторизации в переменную
-    if (!login) {
+    if (!valid(login)) {
       //alert("Введите логин");
       loginInput.style.borderColor = "red";
+      loginInput.value = "";
     } else {
       localStorage.setItem("gloDelivery", login);
 
@@ -217,5 +231,9 @@ createCardRestaurant();
 new Swiper('.swiper-container',
     {
       loop: true,
-      autoplay: true,
+      autoplay: {
+        delay: 3000,
+      },
+ //     slidesPerView: 1,
+  //    slidesPerColumn: 1
     });
