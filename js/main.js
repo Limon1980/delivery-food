@@ -23,6 +23,7 @@ const restaurantTitle = document.querySelector(".restaurant-title");
 const rating = document.querySelector(".rating");
 const minPrice = document.querySelector(".price");
 const category = document.querySelector(".category");
+const inputSearch = document.querySelector(".input-search");
 // modalAuth.classList.remove('modal-auth'); // удалить класс
 
 let login = localStorage.getItem("gloDelivery"); // получаем логин из localStorage
@@ -224,11 +225,11 @@ function openGoods(event) {
   if (restaurant) {
 
     // получаем данные из ресторана в виде массива split
-    console.log(restaurant.dataset.info.split(','));
+   // console.log(restaurant.dataset.info.split(','));
     const info = restaurant.dataset.info.split(',');
     const [name, price, stars, kitchen] = info;
     cardsMenu.textContent = '';
-    console.log(restaurant);
+    //console.log(restaurant);
     containerPromo.classList.add('hide');
     restaurants.classList.add('hide');
     menu.classList.remove('hide');
@@ -268,8 +269,51 @@ function init() {
     containerPromo.classList.remove('hide');
     restaurants.classList.remove('hide');
     menu.classList.add('hide');
+
   });
   
+  inputSearch.addEventListener('keydown', function(event){
+    if (event.keyCode === 13){ // 13 это ENTER клавиша
+       const target = event.target;
+       const value = target.value.toLowerCase();
+       const goods = [];
+
+       getData('./db/partners.json').then(function(data){
+         const products = data.map(function(item){
+           return item.products;
+         });
+
+         products.forEach(function(product){
+              getData(`./db/${product}`)
+              .then(function(data){
+                  goods.push(...data);
+
+                  const searchGoods = goods.filter(function(item){
+                      return item.name.toLowerCase().includes(value);
+                  })
+
+                  cardsMenu.textContent = '';
+                  //console.log(restaurant);
+                  containerPromo.classList.add('hide');
+                  restaurants.classList.add('hide');
+                  menu.classList.remove('hide');
+              
+                  restaurantTitle.textContent = 'Результат поиска';
+                  rating.textContent = '';
+                  minPrice.textContent = '';
+                  category.textContent = '';
+                 // console.log(goods);
+                 return searchGoods;
+              })
+              .then(function(data){
+                goods.forEach(createCardGood);
+              })
+         })
+
+       });
+    }
+  })
+
   checkAuth();
   
   
