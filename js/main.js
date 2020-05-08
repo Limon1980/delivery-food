@@ -272,47 +272,71 @@ function init() {
 
   });
   
-  inputSearch.addEventListener('keydown', function(event){
-    if (event.keyCode === 13){ // 13 это ENTER клавиша
-       const target = event.target;
-       const value = target.value.toLowerCase();
-       const goods = [];
+  inputSearch.addEventListener('keydown', function(event) {
 
-       getData('./db/partners.json').then(function(data){
-         const products = data.map(function(item){
-           return item.products;
-         });
+		if (event.keyCode === 13) {
+			const target = event.target;
+			
+			const value = target.value.toLowerCase().trim();
 
-         products.forEach(function(product){
-              getData(`./db/${product}`)
-              .then(function(data){
-                  goods.push(...data);
+			target.value = '';
 
-                  const searchGoods = goods.filter(function(item){
-                      return item.name.toLowerCase().includes(value);
-                  })
+			if (!value || value.length < 3) {
+				target.style.backgroundColor = 'tomato';
+				setTimeout(function(){
+					target.style.backgroundColor = '';
+				}, 2000);
+				return;
+			}
 
-                  cardsMenu.textContent = '';
-                  //console.log(restaurant);
-                  containerPromo.classList.add('hide');
-                  restaurants.classList.add('hide');
-                  menu.classList.remove('hide');
-              
-                  restaurantTitle.textContent = 'Результат поиска';
-                  rating.textContent = '';
-                  minPrice.textContent = '';
-                  category.textContent = '';
-                 // console.log(goods);
-                 return searchGoods;
-              })
-              .then(function(data){
-                goods.forEach(createCardGood);
-              })
-         })
+			const goods = [];
+			
+			getData('./db/partners.json')
+				.then(function(data) {
+					
+					const products = data.map(function(item){
+						return item.products;
+					});
 
-       });
-    }
-  })
+
+					products.forEach(function(product){
+						getData(`./db/${product}`)
+							.then(function(data){
+								
+								goods.push(...data);
+
+								const searchGoods = goods.filter(function(item) {
+									return item.name.toLowerCase().includes(value)
+								})
+
+								console.log(searchGoods);
+								
+								cardsMenu.textContent = '';
+
+								containerPromo.classList.add('hide');
+								restaurants.classList.add('hide');
+								menu.classList.remove('hide');
+
+								restaurantTitle.textContent = 'Результат поиска';
+								rating.textContent = '';
+								minPrice.textContent = '';
+								category.textContent = '';
+
+								return searchGoods;
+							})
+							.then(function(data){
+								data.forEach(createCardGood);
+							})
+					})
+					
+					
+				});
+
+			
+				
+		}
+		
+	});
 
   checkAuth();
   
