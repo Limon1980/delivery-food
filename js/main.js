@@ -272,7 +272,7 @@ function init() {
 
   });
   
-  inputSearch.addEventListener('keydown', function(event) {
+  	inputSearch.addEventListener('keydown', function(event) {
 
 		if (event.keyCode === 13) {
 			const target = event.target;
