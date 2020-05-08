@@ -248,10 +248,10 @@ function openGoods(event) {
 
   }
 
-} else {
-  toogleModalAuth();
-}
-}
+  } else {
+    toogleModalAuth();
+  }
+  }
 
 function init() {
   getData('./db/partners.json').then(function(data){
