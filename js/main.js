@@ -27,14 +27,22 @@ const modalBody = document.querySelector(".modal-body");
 const modalPrice = document.querySelector(".modal-pricetag");
 const buttonClearCart = document.querySelector(".clear-cart");
 
-const cart = JSON.parse(localStorage.getItem("gloDeliveryCart")) || [];
+const cart = [];
 
 // modalAuth.classList.remove('modal-auth'); // удалить класс
 
 let login = localStorage.getItem("gloDelivery"); // получаем логин из localStorage
 
+const loadCart = function () {
+  if (localStorage.getItem(login)) {
+    JSON.parse(localStorage.getItem(login)).forEach(function (item) {
+      cart.push(item);
+    });
+  }
+};
+
 const saveCart = function () {
-  localStorage.setItem("gloDeliveryCart", JSON.stringify(cart));
+  localStorage.setItem(login, JSON.stringify(cart));
 };
 
 const getData = async function (url) {
@@ -89,6 +97,7 @@ function returnMain() {
 function autorized() {
   function logOut() {
     login = "";
+    cart.length = 0;
     localStorage.removeItem("gloDelivery");
     buttonAuth.style.display = "";
     userName.style.display = "";
@@ -108,6 +117,7 @@ function autorized() {
   buttonOut.style.display = "flex";
   cartButton.style.display = "flex";
   buttonOut.addEventListener("click", logOut);
+  loadCart();
 }
 function notAutorized() {
   //console.log("Не Авторизован");
@@ -330,6 +340,7 @@ function changeCount(event) {
     if (target.classList.contains("counter-plus")) food.count++;
     renderCart();
   }
+  saveCart();
 }
 
 function init() {
